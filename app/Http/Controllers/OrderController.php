@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Engine;
+use App\Color;
+use App\Item;
+use App\Sales;
 use Illuminate\Http\Request;
 
-class EngineController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +16,7 @@ class EngineController extends Controller
      */
     public function index()
     {
-        return view('engine.index', [
-            'engines' => Engine::where('category_id', auth()->user()->id_category)->latest()->get(),
-            'total_capacity' => Engine::where('category_id', auth()->user()->id_category)->sum('capacity')
-        ]);
+        return view('order.index');
     }
 
     /**
@@ -27,7 +26,11 @@ class EngineController extends Controller
      */
     public function create()
     {
-        return view('engine.form');
+        return view('order.form', [
+            'items' => Item::all(),
+            'sales' => Sales::all(),
+            'colors' => Color::all(),
+        ]);
     }
 
     /**

@@ -19,6 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('sb/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    @stack('css')
 
 </head>
 
@@ -43,9 +44,23 @@
             @if(auth()->user()->isManager())
                 <hr class="sidebar-divider my-0">
                 <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" href="{{ url('/') }}">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item {{ Request::is('sales') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('sales') }}">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Sales</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ Request::is('sales/create') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('sales/create') }}">
+                        <i class="fas fa-fw fa-plus"></i>
+                        <span>Sales Baru</span>
                     </a>
                 </li>
             @endif
@@ -55,32 +70,36 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Sales
+                Order
             </div>
 
-            <li class="nav-item {{ Request::is('sales') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('sales') }}">
+            <li class="nav-item {{ Request::is('orders') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('orders') }}">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Sales</span>
+                    <span>List Order</span>
                 </a>
             </li>
 
             @if(auth()->user()->isSoftwinding())
-                <li class="nav-item {{ Request::is('sales/create') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('sales/create') }}">
+                <li class="nav-item {{ Request::is('orders/create') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('orders/create') }}">
                         <i class="fas fa-fw fa-plus"></i>
-                        <span>Sales Baru</span>
+                        <span>Order Baru</span>
                     </a>
                 </li>
             @endif
 
             @if(!auth()->user()->isManager())
-                <hr class="sidebar-divider my-0">
+                <hr class="sidebar-divider">
+
+                <div class="sidebar-heading">
+                    Mesin
+                </div>
 
                 <li class="nav-item {{ Request::is('engines') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('engines') }}">
                         <i class="fas fa-fw fa-list"></i>
-                        <span>Mesin</span>
+                        <span>Mesin {{ auth()->user()->category->name }}</span>
                     </a>
                 </li>
             @endif
@@ -214,6 +233,8 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('sb/js/sb-admin-2.min.js') }}"></script>
+
+    @stack('js')
 
 </body>
 

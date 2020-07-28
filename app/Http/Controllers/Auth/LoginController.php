@@ -51,10 +51,10 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        if ($user->id_category == 5) {
-            return redirect('/');
+        if ($user->id_category != 5) {
+            return redirect('/orders');
         }
 
-        return redirect('/sales');
+        return redirect('/');
     }
 }

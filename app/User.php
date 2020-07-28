@@ -92,4 +92,9 @@ class User extends Authenticatable
     {
         return $this->id_category == 1;
     }
+
+    public function category()
+    {
+        return $this->hasOne('App\Category', 'id', 'id_category');
+    }
 }

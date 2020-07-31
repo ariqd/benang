@@ -43,6 +43,7 @@ class OrderController extends Controller
         $counter = Counter::where("name", "=", "SO")->first();
 
         return view('order.form', [
+            'show' => FALSE,
             'items' => Item::all(),
             'sales' => Sales::all(),
             'colors' => Color::all(),

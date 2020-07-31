@@ -11,16 +11,8 @@ Order Form
 
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.5.7/dist/cleave.min.js"></script> --}}
     {{-- <script src="{{ asset('assets') }}/js/datatables.min.js"></script> --}}
     <script>
-        const today = new Date();
-        const date_start = document.getElementById('date_start');
-        const date_finish = document.getElementById('date_finish');
-        date_start.value = today.toISOString().substr(0, 10);
-        date_start.min = today.toISOString().substr(0, 10);
-        date_finish.value = today.toISOString().substr(0, 10);
-
         $(document).ready(function () {
             $('.select2').select2();
         });
@@ -29,32 +21,73 @@ Order Form
 @endpush
 
 @section('content')
+
+@if(@$show)
+    <div class="row justify-content-center mb-3">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{ route('orders.update', $order->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="form-group">
+                            <label for="grade">Grade</label>
+                            <div class="form-control">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="grade" id="grade_a" value="A" checked>
+                                    <label class="form-check-label" for="grade_a">A</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="grade" id="grade_b" value="B">
+                                    <label class="form-check-label" for="grade_b">B</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="grade" id="grade_c" value="C">
+                                    <label class="form-check-label" for="grade_c">C</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="grade" id="grade_error" value="ERROR">
+                                    <label class="form-check-label" for="grade_error">Error</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                Tandai sebagai selesai
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
             <div class="card-body">
-                @if(session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
-
-                {{-- Halaman ini masih dalam tahap pengembangan. --}}
-
-                <form action="{{ route('orders.store') }}">
+                <form action="{{ route('orders.store') }}" method="POST">
                     @csrf
 
                     <div class="form-group">
-                        <label for="customer">Nama Customer</label>
-                        <input type="text" name="customer" id="customer" class="form-control">
+                        <label for="no_so">Nama Customer</label>
+                        <input type="text" name="no_so" id="no_so" class="form-control" value="{{ @$show ? @$order->no_so : $no_so }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customer_name">Nama Customer</label>
+                        <input type="text" name="customer_name" id="customer_name" class="form-control" @if(@$show) value="{{ @$order->customer_name }}" disabled @endif>
                     </div>
 
                     <div class="form-group">
                         <label for="sales">Sales</label>
-                        <select class="form-control select2" name="sales_id" id="sales">
+                        <select class="form-control select2" name="sales_id" id="sales" @if(@$show) disabled @endif>
                             <option value="" selected disabled>- Pilih Sales -</option>
                             @foreach($sales as $sales)
-                                <option value="{{ $sales->id }}">
+                                <option value="{{ $sales->id }}" @if(@$show && (@$order->sales->id == @$sales->id)) selected @endif>
                                     {{ $sales->name }}
                                 </option>
                             @endforeach
@@ -63,10 +96,10 @@ Order Form
 
                     <div class="form-group">
                         <label for="items">Item</label>
-                        <select class="form-control select2" name="item_id" id="items">
+                        <select class="form-control select2" name="item_id" id="items" @if(@$show) disabled @endif>
                             <option value="" selected disabled>- Pilih Item -</option>
                             @foreach($items as $item)
-                                <option value="{{ $item->id }}">
+                                <option value="{{ $item->id }}" @if(@$show && (@$order->item->id == @$item->id)) selected @endif>
                                     {{ $item->name }}
                                 </option>
                             @endforeach
@@ -75,10 +108,10 @@ Order Form
 
                     <div class="form-group">
                         <label for="colors">Warna</label>
-                        <select class="form-control select2" name="color_id" id="colors">
+                        <select class="form-control select2" name="color_id" id="colors" @if(@$show) disabled @endif>
                             <option value="" selected disabled>- Pilih Warna -</option>
                             @foreach($colors as $color)
-                                <option value="{{ $color->id }}">
+                                <option value="{{ $color->id }}" @if(@$show && (@$order->color->id == @$color->id)) selected @endif>
                                     {{ $color->name }}
                                 </option>
                             @endforeach
@@ -86,16 +119,20 @@ Order Form
                     </div>
 
                     <div class="form-group row">
-                        <label for="quantity" class="col-form-label col-12">Jumlah (Kg)</label>
+                        <label for="qty" class="col-form-label col-12">Jumlah (Kg)</label>
                         <div class="col-4">
-                            <input type="number" name="quantity" id="quantity" class="form-control" min="0" value="1">
+                            <input type="number" name="qty" id="qty" class="form-control" min="0" value="{{ @$show ? $order->qty : 1 }}" {{ @$show ? 'disabled' : '' }}>
                         </div>
                     </div>
 
-                    <div class="form-group row align-items-center">
+                    <div class="form-group form-row align-items-center">
                         <div class="col-5">
-                            <label for="date_start">Tanggal Mulai</label>
-                            <input type="date" name="date_start" id="date_start" class="form-control">
+                            <label for="start_date">Tanggal Mulai</label>
+                            @if(@$show)
+                                <input type="text" name="start_date" id="start_date" class="form-control" @if(@$show) value="{{ @$order->start_date }}" disabled @endif>
+                            @else
+                                <input type="date" name="start_date" id="start_date" class="form-control" min="{{ $today->format('Y-m-d') }}" value="{{ $today->format('Y-m-d') }}">
+                            @endif
                         </div>
 
                         <div class="col-2 text-center">
@@ -103,13 +140,19 @@ Order Form
                         </div>
 
                         <div class="col-5">
-                            <label for="date_finish">Tanggal Selesai</label>
-                            <input type="date" name="date_finish" id="date_finish" class="form-control">
+                            <label for="end_date">Tanggal Selesai</label>
+                            @if(@$show)
+                                <input type="text" name="end_date" id="end_date" class="form-control" @if(@$show) value="{{ @$order->end_date }}" disabled @endif>
+                            @else
+                                <input type="date" name="end_date" id="end_date" class="form-control" min="{{ $today->addDay()->format('Y-m-d') }}" value="{{ $today->addDay()->format('Y-m-d') }}">
+                            @endif
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary float-right">Tambahkan Order Baru</button>
+                        @if(@!$show)
+                            <button type="submit" class="btn btn-primary float-right">Tambahkan Order Baru</button>
+                        @endif
                     </div>
 
                 </form>

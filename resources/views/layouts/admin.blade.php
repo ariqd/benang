@@ -187,6 +187,7 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    @include('layouts.feedback')
                     @yield('content')
                 </div>
                 <!-- /.container-fluid -->

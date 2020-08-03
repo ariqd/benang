@@ -11,9 +11,9 @@ class OrderUser extends Pivot
 
     protected $table = 'order_user';
 
-    public function order()
+    public function batch()
     {
-        return $this->belongsTo('App\Order');
+        return $this->belongsTo('App\Batch');
     }
 
     public function user()

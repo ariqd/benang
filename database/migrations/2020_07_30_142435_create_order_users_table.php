@@ -15,8 +15,8 @@ class CreateOrderUsersTable extends Migration
     {
         Schema::create('order_user', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('order_id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('batch_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('step')->nullable();
             $table->string('grade')->nullable();
             $table->timestamps();

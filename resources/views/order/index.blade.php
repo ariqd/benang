@@ -7,16 +7,17 @@ Order List
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <h5>Order saat ini</h5>
+        <h4>Batch Order Saat Ini</h4>
         <div class="card">
             <table class="table">
                 <thead>
                     <tr>
                         <th>No. SO</th>
+                        <th>No. Batch</th>
                         <th>Nama Customer</th>
-                        <th>Sales</th>
                         <th>Item</th>
                         <th>Color</th>
+                        <th>Qty</th>
                         <th>Mulai</th>
                         <th>Selesai</th>
                         <th>Status</th>
@@ -26,24 +27,26 @@ Order List
                 <tbody>
                     @forelse($orders as $pivot)
                         <tr>
-                            <td class="align-middle">{{ $pivot->order->no_so }}</td>
-                            <td class="align-middle">{{ $pivot->order->customer_name }}</td>
-                            <td class="align-middle">{{ $pivot->order->sales->name }}</td>
-                            <td class="align-middle">{{ $pivot->order->item->name }}</td>
-                            <td class="align-middle">{{ $pivot->order->color->name }}</td>
-                            <td class="align-middle">{{ $pivot->order->start_date }}</td>
-                            <td class="align-middle">{{ $pivot->order->end_date }}</td>
+                            <td class="align-middle">{{ $pivot->batch->order->no_so }}</td>
+                            <td class="align-middle">{{ $pivot->batch->id }}</td>
+                            <td class="align-middle">{{ $pivot->batch->order->sales->name }}</td>
+                            <td class="align-middle">{{ $pivot->batch->order->item->name }}</td>
+                            <td class="align-middle">{{ $pivot->batch->color->name }}</td>
+                            <td class="align-middle">{{ $pivot->batch->qty }}</td>
+                            <td class="align-middle">{{ $pivot->created_at->toFormattedDateString() }}</td>
+                            <td class="align-middle">{{ $pivot->created_at->addDays(12)->toFormattedDateString() }}</td>
+                            {{-- <td class="align-middle">{{ $pivot->order->end_date }}</td> --}}
                             <td class="align-middle">
-                                @if($today >= Carbon\Carbon::createFromFormat('Y-m-d', $pivot->order->end_date))
+                                @if($today >= $pivot->created_at->addDays(12)))
                                     <span class="badge badge-danger">Late</span>
                                 @else
                                     <span class="badge badge-primary">Aktif</span>
                                 @endif
                             </td>
                             <td class="align-middle">
-                                @if($today <= Carbon\Carbon::createFromFormat('Y-m-d', $pivot->order->end_date))
+                                @if($today <= $pivot->created_at->addDays(12))
                                     @if($pivot->user()->exists())
-                                        <a href="{{ route('orders.show', $pivot->order->id) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('orders.show', $pivot->batch->id) }}" class="btn btn-primary btn-sm">
                                             <i class="fa fa-check"></i> Tandai sebagai selesai
                                         </a>
                                     @else

@@ -85,17 +85,17 @@ class User extends Authenticatable
 
     public function isManager()
     {
-        return $this->id_category == 0;
+        return $this->category_id == 0;
     }
 
     public function isSoftwinding()
     {
-        return $this->id_category == 1;
+        return $this->category_id == 1;
     }
 
     public function category()
     {
-        return $this->hasOne('App\Category', 'id', 'id_category');
+        return $this->hasOne('App\Category', 'id', 'category_id');
     }
 
     public function orders()

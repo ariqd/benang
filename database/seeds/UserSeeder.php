@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
             'name' => 'Manajer',
             'username' => 'manajer',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'id_category' => 5
+            'category_id' => 5
         ]);
 
         User::create([
@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
             'username' => 'softwinding-1',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_PAGI,
-            'id_category' => 1
+            'category_id' => 1
         ]);
 
         User::create([
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
             'username' => 'softwinding-2',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_SIANG,
-            'id_category' => 1
+            'category_id' => 1
         ]);
 
         User::create([
@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
             'username' => 'softwinding-3',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_MALAM,
-            'id_category' => 1
+            'category_id' => 1
         ]);
 
         User::create([
@@ -48,7 +48,7 @@ class UserSeeder extends Seeder
             'username' => 'dyeing-1',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_PAGI,
-            'id_category' => 2
+            'category_id' => 2
         ]);
 
         User::create([
@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
             'username' => 'dyeing-2',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_SIANG,
-            'id_category' => 2
+            'category_id' => 2
         ]);
 
         User::create([
@@ -64,7 +64,7 @@ class UserSeeder extends Seeder
             'username' => 'dyeing-3',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_MALAM,
-            'id_category' => 2
+            'category_id' => 2
         ]);
 
         User::create([
@@ -72,7 +72,7 @@ class UserSeeder extends Seeder
             'username' => 'centrifugal-1',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_PAGI,
-            'id_category' => 3
+            'category_id' => 3
         ]);
 
         User::create([
@@ -80,7 +80,7 @@ class UserSeeder extends Seeder
             'username' => 'centrifugal-2',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_SIANG,
-            'id_category' => 3
+            'category_id' => 3
         ]);
 
         User::create([
@@ -88,7 +88,7 @@ class UserSeeder extends Seeder
             'username' => 'centrifugal-3',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_MALAM,
-            'id_category' => 3
+            'category_id' => 3
         ]);
 
         User::create([
@@ -96,7 +96,7 @@ class UserSeeder extends Seeder
             'username' => 'rewinding-1',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_PAGI,
-            'id_category' => 4
+            'category_id' => 4
         ]);
 
         User::create([
@@ -104,7 +104,7 @@ class UserSeeder extends Seeder
             'username' => 'rewinding-2',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_SIANG,
-            'id_category' => 4
+            'category_id' => 4
         ]);
 
         User::create([
@@ -112,7 +112,7 @@ class UserSeeder extends Seeder
             'username' => 'rewinding-3',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_MALAM,
-            'id_category' => 4
+            'category_id' => 4
         ]);
 
         User::create([
@@ -120,7 +120,7 @@ class UserSeeder extends Seeder
             'username' => 'packing-1',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_PAGI,
-            'id_category' => 5
+            'category_id' => 5
         ]);
 
         User::create([
@@ -128,7 +128,7 @@ class UserSeeder extends Seeder
             'username' => 'packing-2',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_SIANG,
-            'id_category' => 5
+            'category_id' => 5
         ]);
 
         User::create([
@@ -136,7 +136,7 @@ class UserSeeder extends Seeder
             'username' => 'packing-3',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'shift' => User::SHIFT_MALAM,
-            'id_category' => 5
+            'category_id' => 5
         ]);
     }
 }

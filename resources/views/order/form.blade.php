@@ -73,19 +73,19 @@ Order Form
                     @csrf
 
                     <div class="form-group">
-                        <label for="no_so">Nama Customer</label>
+                        <label for="no_so">No. Order</label>
                         <input type="text" name="no_so" id="no_so" class="form-control" value="{{ @$show ? @$order->no_so : $no_so }}" readonly>
                     </div>
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="customer_name">Nama Customer</label>
                         <input type="text" name="customer_name" id="customer_name" class="form-control" @if(@$show) value="{{ @$order->customer_name }}" disabled @endif>
-                    </div>
+                    </div> --}}
 
                     <div class="form-group">
-                        <label for="sales">Sales</label>
+                        <label for="sales">Customer</label>
                         <select class="form-control select2" name="sales_id" id="sales" @if(@$show) disabled @endif>
-                            <option value="" selected disabled>- Pilih Sales -</option>
+                            <option value="" selected disabled>- Pilih Customer -</option>
                             @foreach($sales as $sales)
                                 <option value="{{ $sales->id }}" @if(@$show && (@$order->sales->id == @$sales->id)) selected @endif>
                                     {{ $sales->name }}
@@ -125,7 +125,7 @@ Order Form
                         </div>
                     </div>
 
-                    <div class="form-group form-row align-items-center">
+                    {{-- <div class="form-group form-row align-items-center">
                         <div class="col-5">
                             <label for="start_date">Tanggal Mulai</label>
                             @if(@$show)
@@ -147,7 +147,7 @@ Order Form
                                 <input type="date" name="end_date" id="end_date" class="form-control" min="{{ $today->addDay()->format('Y-m-d') }}" value="{{ $today->addDay()->format('Y-m-d') }}">
                             @endif
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="form-group">
                         @if(@!$show)

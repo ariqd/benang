@@ -21,12 +21,12 @@ class OrderController extends Controller
      */
     public function index()
     {
-        // dd(OrderUser::where('step', Auth::user()->id_category)->get());
+        // dd(OrderUser::where('step', Auth::user()->category_id)->get());
 
         return view('order.index', [
             // 'orders' => Order::mine()->unfinished()->latest()->get(),
-            'orders' => OrderUser::with('order')->where([
-                'step' => Auth::user()->id_category,
+            'orders' => OrderUser::with('batch')->where([
+                'step' => Auth::user()->category_id,
                 'grade' => null,
             ])->get(),
             'today' => CarbonImmutable::today()

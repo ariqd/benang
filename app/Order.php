@@ -17,9 +17,14 @@ class Order extends Model
         return $this->belongsToMany('App\User')->using('App\OrderUser')->withPivot('grade', 'step')->withTimestamps();
     }
 
-    public function process()
+    // public function process()
+    // {
+    //     return $this->hasMany('App\OrderUser');
+    // }
+
+    public function batch()
     {
-        return $this->hasMany('App\OrderUser');
+        return $this->hasMany('App\Batch');
     }
 
     public function sales()

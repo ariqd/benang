@@ -80,14 +80,14 @@
                 </a>
             </li>
 
-            @if(auth()->user()->isSoftwinding())
+            {{-- @if(auth()->user()->isSoftwinding())
                 <li class="nav-item {{ Request::is('orders/create') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('orders/create') }}">
                         <i class="fas fa-fw fa-plus"></i>
                         <span>Order Baru</span>
                     </a>
                 </li>
-            @endif
+            @endif --}}
 
             @if(!auth()->user()->isManager())
                 <hr class="sidebar-divider">

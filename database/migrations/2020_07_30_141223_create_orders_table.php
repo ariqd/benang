@@ -18,8 +18,6 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('sales_id');
             $table->unsignedBigInteger('item_id');
             $table->text('no_so');
-            // $table->string('customer_name');
-            // $table->integer('qty');
             $table->timestamps();
         });
     }

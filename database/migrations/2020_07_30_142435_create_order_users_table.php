@@ -13,12 +13,13 @@ class CreateOrderUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_user', function (Blueprint $table) {
+        Schema::create('process', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('batch_id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('step')->nullable();
             $table->string('grade')->nullable();
+            $table->float('error')->default(0);
             $table->timestamps();
         });
     }

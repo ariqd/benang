@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBatchesTable extends Migration
+class CreateEngineOrderUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateBatchesTable extends Migration
      */
     public function up()
     {
-        Schema::create('batches', function (Blueprint $table) {
+        Schema::create('process_engines', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->unsignedBigInteger('color_id');
+            $table->unsignedBigInteger('process_id');
+            $table->unsignedBigInteger('engine_id');
             $table->float('qty');
             $table->timestamps();
 
-            $table->foreign('order_id')->references('id')->on('orders');
-            $table->foreign('color_id')->references('id')->on('colors');
+            $table->foreign('process_id')->references('id')->on('process');
+            $table->foreign('engine_id')->references('id')->on('engines');
         });
     }
 
@@ -32,6 +32,6 @@ class CreateBatchesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('batches');
+        Schema::dropIfExists('engine_order_users');
     }
 }

@@ -14,9 +14,9 @@ Order List
                     <tr>
                         <th>No. SO</th>
                         <th>No. Batch</th>
-                        <th>Nama Customer</th>
+                        <th>Customer</th>
                         <th>Item</th>
-                        <th>Color</th>
+                        <th>Warna</th>
                         <th>Qty</th>
                         <th>Mulai</th>
                         <th>Selesai</th>
@@ -34,7 +34,7 @@ Order List
                             <td class="align-middle">{{ $pivot->batch->color->name }}</td>
                             <td class="align-middle">{{ $pivot->batch->qty }}</td>
                             <td class="align-middle">{{ $pivot->created_at->toFormattedDateString() }}</td>
-                            <td class="align-middle">{{ $pivot->created_at->addDays(12)->toFormattedDateString() }}</td>
+                            <td class="align-middle">{{ $pivot->batch->created_at->addDays(12)->toFormattedDateString() }}</td>
                             {{-- <td class="align-middle">{{ $pivot->order->end_date }}</td> --}}
                             <td class="align-middle">
                                 @if($today >= $pivot->created_at->addDays(12)))
@@ -46,7 +46,7 @@ Order List
                             <td class="align-middle">
                                 @if($today <= $pivot->created_at->addDays(12))
                                     @if($pivot->user()->exists())
-                                        <a href="{{ route('orders.show', $pivot->batch->id) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('orders.show', $pivot->id) }}" class="btn btn-primary btn-sm">
                                             <i class="fa fa-check"></i> Tandai sebagai selesai
                                         </a>
                                     @else

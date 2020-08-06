@@ -26,7 +26,7 @@ class AssignForeignKeys extends Migration
             $table->foreign('item_id')->references('id')->on('items');
         });
 
-        Schema::table('order_user', function (Blueprint $table) {
+        Schema::table('process', function (Blueprint $table) {
             $table->foreign('batch_id')->references('id')->on('batches');
             $table->foreign('user_id')->references('id')->on('users');
         });

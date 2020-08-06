@@ -17,7 +17,7 @@ class CreateEnginesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('category_id');
             $table->string('name');
-            $table->integer('capacity');
+            $table->float('capacity');
             $table->timestamps();
         });
     }

@@ -14,6 +14,14 @@ class EngineController extends Controller
      */
     public function index()
     {
+        // $engines = Engine::where('category_id', auth()->user()->category_id)->latest()->get();
+
+        // foreach ($engines as $engine) {
+        //     foreach ($engine->usage as $usage) {
+        //         dd($usage->order_user);
+        //     }
+        // }
+
         return view('engine.index', [
             'engines' => Engine::where('category_id', auth()->user()->category_id)->latest()->get(),
             'total_capacity' => Engine::where('category_id', auth()->user()->category_id)->sum('capacity')

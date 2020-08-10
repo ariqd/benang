@@ -18,6 +18,7 @@ class CreateOrderUsersTable extends Migration
             $table->unsignedBigInteger('batch_id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('step')->nullable();
+            $table->float('processed')->default(0);
             $table->string('grade')->nullable();
             $table->float('error')->default(0);
             $table->timestamps();

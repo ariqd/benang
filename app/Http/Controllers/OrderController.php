@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Color;
 use App\Counter;
 use App\Engine;
+use App\EngineOrderUser;
 use App\Item;
 use App\Order;
 use App\OrderUser;
@@ -88,7 +89,13 @@ class OrderController extends Controller
             ['grade', '!=', NULL],
         ])->orderBy('step')->get();
 
-        $error_qty = $pivots->sum('error');
+        $actual_qty =  $pivot->batch->qty - $pivots->sum('error');
+
+        dd($pivot->has('usage'));
+
+        if ($pivot->has('usage')) {
+            $actual_qty -= ($pivot->usage->sum('qty') - $pivot->sum('processed'));
+        }
 
         return view('order.form', [
             'pivot' => $pivot,
@@ -98,7 +105,7 @@ class OrderController extends Controller
             'colors' => Color::all(),
             'today' => CarbonImmutable::today(),
             'pivots' => $pivots,
-            'actual_qty' => $pivot->batch->qty - $error_qty,
+            'actual_qty' => $actual_qty,
             'startOrder' => false,
         ]);
     }
@@ -118,7 +125,11 @@ class OrderController extends Controller
             ['grade', '!=', NULL],
         ])->orderBy('step')->get();
 
-        $error_qty = $pivots->sum('error');
+        $actual_qty =  $pivot->batch->qty - $pivots->sum('error');
+
+        if (EngineOrderUser::where('process_id', $id)->count() > 0) {
+            $actual_qty -= ($pivot->usage->sum('qty') - $pivot->sum('processed'));
+        }
 
         return view('order.form', [
             'pivot' => $pivot,
@@ -129,18 +140,51 @@ class OrderController extends Controller
             'colors' => Color::all(),
             'today' => CarbonImmutable::today(),
             'pivots' => $pivots,
-            'actual_qty' => $pivot->batch->qty - $error_qty,
+            'actual_qty' => $actual_qty,
             'engines' => Engine::where('category_id', auth()->user()->category_id)->get()
         ]);
     }
 
     public function startOrder(Request $request, $id)
     {
+        $input = $request->all();
         $pivot = OrderUser::find($id);
+
+        // dd($pivot);
+
+        $to_be_processed = 0;
+        foreach ($input['process_qty'] as $id => $process) {
+            $to_be_processed += $process;
+        }
+
+        // dump($pivot->sum('processed'));
+        // dump($to_be_processed);
+        // dump(($pivot->batch->qty - $pivot->sum('processed')) - $pivot->sum('error'));
+        // dd($pivot->batch->qty - $pivot->sum('processed'));
+
+        if ($to_be_processed > $request->qty) {
+            return redirect()->back()->withInput()->with('error', 'Jumlah Qty Produksi lebih besar dari Qty Order ini!');
+        }
+
+        // if ($to_be_processed < $pivot->batch->qty) {
+        //     return redirect()->back()->withInput()->with('error', 'Jumlah Qty Produksi kurang dari Qty Order ini!');
+        // }
+
+        $pivot->processed += $to_be_processed;
 
         $pivot->user_id = Auth::id();
 
         $pivot->save();
+
+        foreach ($input['process_qty'] as $id => $qty) {
+            if ($qty > 0) {
+                EngineOrderUser::create([
+                    'process_id' => $pivot->id,
+                    'engine_id' => $id,
+                    'qty' => $qty
+                ]);
+            }
+        }
 
         return redirect()->route('orders.index')->with('info', 'Order #' . $pivot->batch->order->no_so . ' telah dimulai untuk proses ini.');
     }
@@ -155,20 +199,29 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $pivot = OrderUser::find($id);
+
+        $nextStep = Auth::user()->category->id;
+
+        if (($pivot->sum('processed') + $pivot->sum('error')) >= $pivot->usage->sum('qty')) {
+            $nextStep += 1;
+        }
+
         $pivot->grade = $request->grade;
         $pivot->error = $request->error;
         $pivot->save();
 
-        $nextStep = Auth::user()->category->id += 1;
+        if ($nextStep <= Order::STEP_PACKING) {
+            OrderUser::create([
+                'batch_id' => $pivot->batch->id,
+                'step' => $nextStep
+            ]);
 
-        OrderUser::create([
-            'batch_id' => $pivot->batch->id,
-            'step' => $nextStep
-        ]);
+            EngineOrderUser::where('process_id', $pivot->id)->update(['active' => FALSE]);
+        }
 
         return redirect()
             ->route('orders.index')
-            ->with('info', 'Order #' . $pivot->batch->order->no_so . ' telah ditandai selesai untuk proses ini.');
+            ->with('info', 'Batch Order #' . $pivot->batch->order->no_so . ' telah ditandai selesai.');
     }
 
     /**

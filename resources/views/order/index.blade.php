@@ -32,10 +32,9 @@ Order List
                             <td class="align-middle">{{ $pivot->batch->order->sales->name }}</td>
                             <td class="align-middle">{{ $pivot->batch->order->item->name }}</td>
                             <td class="align-middle">{{ $pivot->batch->color->name }}</td>
-                            <td class="align-middle">{{ $pivot->batch->qty }}</td>
+                            <td class="align-middle">{{ $pivot->batch->qty }} Kg</td>
                             <td class="align-middle">{{ $pivot->created_at->toFormattedDateString() }}</td>
                             <td class="align-middle">{{ $pivot->batch->created_at->addDays(12)->toFormattedDateString() }}</td>
-                            {{-- <td class="align-middle">{{ $pivot->order->end_date }}</td> --}}
                             <td class="align-middle">
                                 @if($today >= $pivot->created_at->addDays(12)))
                                     <span class="badge badge-danger">Late</span>

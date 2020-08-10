@@ -18,6 +18,7 @@ class CreateEngineOrderUsersTable extends Migration
             $table->unsignedBigInteger('process_id');
             $table->unsignedBigInteger('engine_id');
             $table->float('qty');
+            $table->boolean('active')->default(false);
             $table->timestamps();
 
             $table->foreign('process_id')->references('id')->on('process');

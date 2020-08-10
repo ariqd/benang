@@ -57,12 +57,12 @@ Order Form
                             <label for="error" class="col-12">Error Qty.</label>
                             <div class="col-4">
                                 <input type="number" name="error" id="error" class="form-control" value="0" max="{{ $pivot->batch->qty }}">
-                                <small class="text-muted">Maksimal {{ $actual_qty }} pcs</small>
+                                <small class="text-muted">Maksimal {{ $pivot->usage->sum('qty') }} kg</small>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary" {{ $actual_qty > 0 ? '' : 'disabled' }}>
+                            <button type="submit" class="btn btn-primary">
                                 Tandai sebagai selesai
                             </button>
                         </div>
@@ -71,26 +71,38 @@ Order Form
             </div>
         </div>
     </div>
-
 @elseif(@$startOrder)
-
     <div class="row justify-content-center mb-3">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
                     <h5 class="mb-3">Mulai Produksi Order #{{ $pivot->batch->order->no_so }}</h5>
-                    <form action="{{ route('orders.update', $pivot->id) }}" method="POST">
+                    <form action="{{ url('orders/start/' . $pivot->id) }}" method="POST">
                         @csrf
                         @method('PUT')
 
-                        @foreach($engines as $engine)
-                            <div class="form-group form-row">
-                                <label for="process_qty" class="col-form-label col-12 col-md-3 text-right">Mesin {{ $engine->name }} (Kg)</label>
-                                <div class="col-12 col-md-6">
-                                    <input type="number" name="process_qty" id="process_qty" class="form-control" value="0" max="{{ $pivot->batch->qty }}">
-                                    {{-- <small class="text-muted">Maksimal {{ $actual_qty }} pcs</small> --}}
-                                </div>
+                        <div class="form-group form-row">
+                            <label for="qty" class="col-form-label col-12 col-md-3 text-right">Qty Setelah Error</label>
+                            <div class="col-12 col-md-6">
+                                <input type="number" name="qty" id="qty" class="form-control" min="0" value="{{ @$show || @$startOrder ? $actual_qty : 1 }}" {{ @$show || @$startOrder ? 'readonly' : '' }}>
                             </div>
+                            <div class="col-12 col-md-3">
+                                <small class="text-muted">Kg</small>
+                            </div>
+                        </div>
+
+                        @foreach($engines as $engine)
+                            @if($engine->capacity - $engine->usage->where('active', TRUE)->sum('qty') > 0)
+                                <div class="form-group form-row align-items-center">
+                                    <label for="process_qty_{{ $engine->id }}" class="col-form-label col-12 col-md-3 text-right">Mesin {{ $engine->name }} (Max. {{ $engine->capacity - $engine->usage->where('active', TRUE)->sum('qty') }} Kg)</label>
+                                    <div class="col-12 col-md-3">
+                                        <input type="number" name="process_qty[{{ $engine->id }}]" id="process_qty_{{ $engine->id }}" class="form-control" value="{{ old('process_qty.'.$engine->id) }}" max="{{ $engine->capacity - $engine->usage->where('active', TRUE)->sum('qty') }}">
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <small class="text-muted">Kg</small>
+                                    </div>
+                                </div>
+                            @endif
                         @endforeach
 
                         <div class="form-group row">
@@ -114,6 +126,7 @@ Order Form
                         <thead>
                             <th>No.</th>
                             <th>Proses</th>
+                            <th>Diproses</th>
                             <th>Grade</th>
                             <th>Error</th>
                         </thead>
@@ -122,26 +135,27 @@ Order Form
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ App\OrderUser::step($process->step) }}</td>
+                                    <td>{{ $process->processed }} Kg</td>
                                     <td>{{ $process->grade }}</td>
                                     <td>{{ $process->error }} Kg</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4">Tidak ada proses sebelumnya.</td>
+                                    <td colspan="5">Tidak ada proses sebelumnya.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="3" class="text-right">Qty Batch:</td>
+                                <td colspan="4" class="text-right">Qty Batch:</td>
                                 <td>{{ $pivot->batch->qty }} Kg</td>
                             </tr>
                             <tr>
-                                <td colspan="3" class="text-right">Total Error:</td>
+                                <td colspan="4" class="text-right">Total Error:</td>
                                 <td>{{ $pivots->sum('error') }} Kg</td>
                             </tr>
                             <tr>
-                                <td colspan="3" class="text-right"><strong>Qty Sekarang:</strong></td>
+                                <td colspan="4" class="text-right"><strong>Qty Sekarang:</strong></td>
                                 <td><b>{{ $actual_qty }} Kg</b></td>
                             </tr>
                         </tfoot>

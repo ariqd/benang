@@ -32,6 +32,11 @@ class OrderUser extends Pivot
         return $this->belongsTo('App\User');
     }
 
+    public function usage()
+    {
+        return $this->hasMany('App\EngineOrderUser', 'process_id');
+    }
+
     public static function step($step)
     {
         switch ($step) {
@@ -50,5 +55,10 @@ class OrderUser extends Pivot
             default:
                 return 'No Role';
         }
+
+        // public function scopeFinished($query) 
+        // {
+        //     return $query->
+        // }
     }
 }

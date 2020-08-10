@@ -10,4 +10,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/sales', 'SalesController');
     Route::resource('/engines', 'EngineController');
     Route::resource('/orders', 'OrderController');
+    Route::put('/orders/start/{id}', 'OrderController@startOrder');
 });

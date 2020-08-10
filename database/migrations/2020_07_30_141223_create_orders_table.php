@@ -18,6 +18,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('sales_id');
             $table->unsignedBigInteger('item_id');
             $table->text('no_so');
+            // $table->string('status')->default('CREATED');
             $table->timestamps();
         });
     }

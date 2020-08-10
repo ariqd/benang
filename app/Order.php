@@ -11,6 +11,7 @@ class Order extends Model
     protected $guarded = ['id'];
 
     public const STEP_SOFTWINDING = 1;
+    public const STEP_PACKING = 5;
 
     public function users()
     {

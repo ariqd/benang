@@ -60,5 +60,53 @@ class OrderUser extends Pivot
         // {
         //     return $query->
         // }
+
     }
+
+    // public function getTotalProcessedInThisStepAttribute()
+    // {
+    //     return $this->where([
+    //         ['batch_id', $this->batch_id],
+    //         ['step', $this->step],
+    //     ])->sum('processed');
+    // }
+
+    public function getCurrentStepProcessedAttribute()
+    {
+        return $this->where([
+            ['batch_id', $this->batch_id],
+            ['step', $this->step],
+        ])->sum('processed');
+    }
+
+    public function getCurrentStepErrorsAttribute()
+    {
+        return $this->where([
+            ['batch_id', $this->batch_id],
+            ['step', $this->step],
+        ])->sum('error');
+    }
+
+    public function getCurrentStepQtyAttribute()
+    {
+        return $this->batch->qty - $this->current_step_processed - $this->current_step_errors;
+    }
+
+    public function getTotalErrorsAttribute()
+    {
+        return $this->where([
+            ['batch_id', $this->batch_id],
+            // ['step', $this->step],
+        ])->sum('error');
+    }
+
+    public function getQtyAfterErrorsAttribute()
+    {
+        return $this->batch->qty - $this->total_errors;
+    }
+
+    // public function scopeTotalProcessed($query, $batch_id)
+    // {
+    //     return $query->where('batch_id', $batch_id)->sum('processed');
+    // }
 }

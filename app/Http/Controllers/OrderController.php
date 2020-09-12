@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Batch;
 use App\Color;
 use App\Counter;
 use App\Engine;
@@ -13,6 +14,7 @@ use App\Sales;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+// use Symfony\Component\Process\Process;
 
 class OrderController extends Controller
 {
@@ -23,11 +25,28 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('order.index', [
-            'orders' => OrderUser::with('batch')->where([
+        $today = CarbonImmutable::today();
+
+        if (Auth::user()->isManager()) {
+            $orders = OrderUser::all();
+        } else {
+            $orders = OrderUser::where([
                 'step' => Auth::user()->category_id,
                 'grade' => null,
-            ])->get(),
+            ])
+                ->whereBetween('created_at', [$today, $today->addDays(20)])
+                ->orderBy('batch_id')
+                ->get();
+        }
+
+
+        // foreach ($orders as $pivot) {
+        //     dd($orders->sum('processed'));
+        //     # code...
+        // }
+
+        return view('order.index', [
+            'orders' => $orders,
             'today' => CarbonImmutable::today()
         ]);
     }
@@ -44,7 +63,7 @@ class OrderController extends Controller
         return view('order.form', [
             'show' => FALSE,
             'items' => Item::all(),
-            'sales' => Sales::all(),
+            'sales' => Sales::orderBy('name')->get(),
             'colors' => Color::all(),
             'today' => CarbonImmutable::today(),
             'no_so' => "SO" . date("ymd") . str_pad(Auth::id(), 2, 0, STR_PAD_LEFT) . str_pad($counter->counter, 5, 0, STR_PAD_LEFT)
@@ -59,19 +78,36 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $order = Order::create($request->all());
+        $input = $request->all();
+
+        $order = Order::create([
+            'sales_id' => $input['sales_id'],
+            'no_so' => $input['no_so'],
+            'item_id' => $input['item_id'],
+        ]);
 
         if (!$order) {
             return redirect()->route('orders.create')->with('error', 'Order gagal ditambahkan.');
+        } else {
+            $counter = Counter::where("name", "=", "SO")->first();
+            $counter->counter += 1;
+            $counter->save();
+
+            foreach ($input['batches'] as $batch) {
+                $batch_to_be_processed = Batch::create([
+                    'order_id' => $order->id,
+                    'color_id' => $batch['color'],
+                    'qty' => $batch['qty'],
+                ]);
+
+                OrderUser::create([
+                    'batch_id' => $batch_to_be_processed->id,
+                    'step' => Order::STEP_SOFTWINDING
+                ]);
+            }
+
+            return redirect()->route('orders.index')->with('info', 'Order berhasil ditambahkan.');
         }
-
-        $counter = Counter::where("name", "=", "SO")->first();
-        $counter->counter += 1;
-        $counter->save();
-
-        $order->users()->attach(Auth::user(), ['step' => Order::STEP_SOFTWINDING]);
-
-        return redirect()->route('orders.index')->with('info', 'Order berhasil ditambahkan.');
     }
 
     /**
@@ -89,12 +125,10 @@ class OrderController extends Controller
             ['grade', '!=', NULL],
         ])->orderBy('step')->get();
 
-        $actual_qty =  $pivot->batch->qty - $pivots->sum('error');
+        $actual_qty = $pivot->batch->qty - $pivots->sum('error');
 
-        dd($pivot->has('usage'));
-
-        if ($pivot->has('usage')) {
-            $actual_qty -= ($pivot->usage->sum('qty') - $pivot->sum('processed'));
+        if ($pivots->count() > 0) {
+            $actual_qty -= ($pivot->usage->sum('qty') - $pivot->processed);
         }
 
         return view('order.form', [
@@ -125,10 +159,10 @@ class OrderController extends Controller
             ['grade', '!=', NULL],
         ])->orderBy('step')->get();
 
-        $actual_qty =  $pivot->batch->qty - $pivots->sum('error');
+        $actual_qty = $pivot->batch->qty - $pivots->sum('error');
 
-        if (EngineOrderUser::where('process_id', $id)->count() > 0) {
-            $actual_qty -= ($pivot->usage->sum('qty') - $pivot->sum('processed'));
+        if ($pivots->count() > 0 && $pivot->usage) {
+            $actual_qty -= ($pivot->usage->sum('qty') - $pivot->processed);
         }
 
         return view('order.form', [
@@ -141,7 +175,8 @@ class OrderController extends Controller
             'today' => CarbonImmutable::today(),
             'pivots' => $pivots,
             'actual_qty' => $actual_qty,
-            'engines' => Engine::where('category_id', auth()->user()->category_id)->get()
+            'engines' => Engine::where('category_id', auth()->user()->category_id)->get(),
+            'mulaiProduksi' => true
         ]);
     }
 
@@ -150,25 +185,14 @@ class OrderController extends Controller
         $input = $request->all();
         $pivot = OrderUser::find($id);
 
-        // dd($pivot);
-
         $to_be_processed = 0;
         foreach ($input['process_qty'] as $id => $process) {
             $to_be_processed += $process;
         }
 
-        // dump($pivot->sum('processed'));
-        // dump($to_be_processed);
-        // dump(($pivot->batch->qty - $pivot->sum('processed')) - $pivot->sum('error'));
-        // dd($pivot->batch->qty - $pivot->sum('processed'));
-
         if ($to_be_processed > $request->qty) {
             return redirect()->back()->withInput()->with('error', 'Jumlah Qty Produksi lebih besar dari Qty Order ini!');
         }
-
-        // if ($to_be_processed < $pivot->batch->qty) {
-        //     return redirect()->back()->withInput()->with('error', 'Jumlah Qty Produksi kurang dari Qty Order ini!');
-        // }
 
         $pivot->processed += $to_be_processed;
 
@@ -202,12 +226,12 @@ class OrderController extends Controller
 
         $nextStep = Auth::user()->category->id;
 
-        if (($pivot->sum('processed') + $pivot->sum('error')) >= $pivot->usage->sum('qty')) {
+        if (($pivot->current_step_processed + $pivot->current_step_errors) >= $pivot->batch->qty) {
             $nextStep += 1;
         }
 
         $pivot->grade = $request->grade;
-        $pivot->error = $request->error;
+        $pivot->error = $request->error ?? 0;
         $pivot->save();
 
         if ($nextStep <= Order::STEP_PACKING) {
@@ -222,16 +246,5 @@ class OrderController extends Controller
         return redirect()
             ->route('orders.index')
             ->with('info', 'Batch Order #' . $pivot->batch->order->no_so . ' telah ditandai selesai.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

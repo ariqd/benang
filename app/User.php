@@ -85,7 +85,7 @@ class User extends Authenticatable
 
     public function isManager()
     {
-        return $this->category_id == 0;
+        return $this->category_id == 6;
     }
 
     public function isSoftwinding()

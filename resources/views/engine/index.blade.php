@@ -6,11 +6,11 @@ Mesin {{ auth()->user()->category->name }}
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
+    {{-- <div class="col-md-12">
         <p class="font-weight-bold">
             Total Kapasitas = {{ $total_capacity }} Kg | Digunakan = 100 Kg | Tersisa = 100 Kg
         </p>
-    </div>
+    </div> --}}
 
     @forelse($engines as $engine)
         <div class="col-md-2 my-2">

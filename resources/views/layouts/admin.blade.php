@@ -50,19 +50,19 @@
                     </a>
                 </li>
                 
-                <li class="nav-item {{ Request::is('sales') ? 'active' : '' }}">
+                {{-- <li class="nav-item {{ Request::is('sales') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('sales') }}">
                         <i class="fas fa-fw fa-users"></i>
                         <span>Sales</span>
                     </a>
                 </li>
 
-                <li class="nav-item {{ Request::is('sales/create') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('sales/create') }}">
+                <li class="nav-item {{ Request::is('orders/create') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('orders/create') }}">
                         <i class="fas fa-fw fa-plus"></i>
                         <span>Sales Baru</span>
                     </a>
-                </li>
+                </li> --}}
             @endif
 
             <!-- Divider -->
@@ -79,6 +79,15 @@
                     <span>List Order</span>
                 </a>
             </li>
+
+            @if(auth()->user()->isManager())
+                <li class="nav-item {{ Request::is('orders/create') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('orders/create') }}">
+                        <i class="fas fa-fw fa-plus"></i>
+                        <span>Order Baru</span>
+                    </a>
+                </li>
+            @endif
 
             {{-- @if(auth()->user()->isSoftwinding())
                 <li class="nav-item {{ Request::is('orders/create') ? 'active' : '' }}">

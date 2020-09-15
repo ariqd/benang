@@ -66,6 +66,7 @@ class OrderController extends Controller
             'sales' => Sales::orderBy('name')->get(),
             'colors' => Color::all(),
             'today' => CarbonImmutable::today(),
+            'mulaiProduksi' => false,
             'no_so' => "SO" . date("ymd") . str_pad(Auth::id(), 2, 0, STR_PAD_LEFT) . str_pad($counter->counter, 5, 0, STR_PAD_LEFT)
         ]);
     }
@@ -141,6 +142,7 @@ class OrderController extends Controller
             'pivots' => $pivots,
             'actual_qty' => $actual_qty,
             'startOrder' => false,
+            'mulaiProduksi' => false
         ]);
     }
 

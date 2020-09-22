@@ -27,8 +27,8 @@ class OrderController extends Controller
     {
         $today = CarbonImmutable::today();
 
-        if (Auth::user()->isManager()) {
-            $orders = OrderUser::all();
+        if (Auth::user()->isManager() || Auth::user()->isPpic()) {
+            $orders = OrderUser::latest()->get();
         } else {
             $orders = OrderUser::where([
                 'step' => Auth::user()->category_id,
@@ -36,6 +36,7 @@ class OrderController extends Controller
             ])
                 ->whereBetween('created_at', [$today, $today->addDays(20)])
                 ->orderBy('batch_id')
+                ->latest()
                 ->get();
         }
 
@@ -228,7 +229,10 @@ class OrderController extends Controller
 
         $nextStep = Auth::user()->category->id;
 
-        if (($pivot->current_step_processed + $pivot->current_step_errors) >= $pivot->batch->qty) {
+        // dd($pivot->current_step_processed >= $pivot->qty_after_errors);
+
+        // if (($pivot->current_step_processed + $pivot->current_step_errors) >= $pivot->batch->qty) {
+        if ($pivot->current_step_processed >= $pivot->qty_after_errors) {
             $nextStep += 1;
         }
 

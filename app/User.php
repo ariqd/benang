@@ -10,12 +10,13 @@ class User extends Authenticatable
 {
     // use Notifiable;
 
-    // const ROLE_MANAGER = 0;
-    // const ROLE_SOFTWINDING = 1;
-    // const ROLE_DYEING = 2;
-    // const ROLE_CENTRIFUGAL = 3;
-    // const ROLE_REWINDING = 4;
-    // const ROLE_PACKING = 5;
+    const ROLE_SOFTWINDING = 1;
+    const ROLE_DYEING = 2;
+    const ROLE_CENTRIFUGAL = 3;
+    const ROLE_REWINDING = 4;
+    const ROLE_PACKING = 5;
+    const ROLE_MANAGER = 6;
+    const ROLE_PPIC = 7;
 
     const SHIFT_PAGI = 0;
     const SHIFT_SIANG = 1;
@@ -85,12 +86,17 @@ class User extends Authenticatable
 
     public function isManager()
     {
-        return $this->category_id == 6;
+        return $this->category_id == self::ROLE_MANAGER;
+    }
+
+    public function isPpic()
+    {
+        return $this->category_id == self::ROLE_PPIC;
     }
 
     public function isSoftwinding()
     {
-        return $this->category_id == 1;
+        return $this->category_id == self::ROLE_SOFTWINDING;
     }
 
     public function category()

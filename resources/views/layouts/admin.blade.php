@@ -80,7 +80,8 @@
                 </a>
             </li>
 
-            @if(auth()->user()->isManager())
+            @if(auth()->user()->isPpic())
+            {{-- @if(auth()->user()->isManager()) --}}
                 <li class="nav-item {{ Request::is('orders/create') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('orders/create') }}">
                         <i class="fas fa-fw fa-plus"></i>
@@ -98,7 +99,7 @@
                 </li>
             @endif --}}
 
-            @if(!auth()->user()->isManager())
+            @if(!auth()->user()->isManager() && !auth()->user()->isPpic())
                 <hr class="sidebar-divider">
 
                 <div class="sidebar-heading">

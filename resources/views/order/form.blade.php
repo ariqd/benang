@@ -134,9 +134,9 @@ Order Form
                     @method('PUT')
 
                     <div class="form-group form-row">
-                        <label for="qty" class="col-form-label col-12 col-md-3 text-right">Qty Setelah Error</label>
+                        <label for="qty" class="col-form-label col-12 col-md-3 text-right">Qty Setelah Error / Sisa</label>
                         <div class="col-12 col-md-6">
-                            <input type="number" name="qty" id="qty" class="form-control" min="0" value="{{ @$show || @$startOrder ? $pivot->current_step_qty : 1 }}" {{ @$show || @$startOrder ? 'readonly' : '' }}>
+                            <input type="number" name="qty" id="qty" class="form-control" min="0" value="{{ @$show || @$startOrder ? $pivot->qty_before_this_step - $pivot->current_step_processed : 1 }}" {{ @$show || @$startOrder ? 'readonly' : '' }}>
                         </div>
                         <div class="col-12 col-md-3">
                             <small class="text-muted">Kg</small>

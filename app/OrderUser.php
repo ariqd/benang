@@ -100,9 +100,22 @@ class OrderUser extends Pivot
         ])->sum('error');
     }
 
+    public function getTotalErrorsBeforeThisStepAttribute()
+    {
+        return $this->where([
+            ['batch_id', $this->batch_id],
+            ['step', '<', $this->step],
+        ])->sum('error');
+    }
+
     public function getQtyAfterErrorsAttribute()
     {
         return $this->batch->qty - $this->total_errors;
+    }
+
+    public function getQtyBeforeThisStepAttribute()
+    {
+        return $this->batch->qty - $this->total_errors_before_this_step;
     }
 
     // public function scopeTotalProcessed($query, $batch_id)

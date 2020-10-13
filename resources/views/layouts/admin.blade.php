@@ -40,8 +40,8 @@
 
             @if(auth()->user()->isManager())
                 <hr class="sidebar-divider my-0">
-                <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('/') }}">
+                <li class="nav-item {{ Request::is('/dashboard') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('/dashboard') }}">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>

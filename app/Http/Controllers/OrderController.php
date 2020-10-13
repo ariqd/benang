@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Item;
 use App\Batch;
 use App\Color;
-use App\Counter;
-use App\Engine;
-use App\EngineOrderUser;
-use App\Item;
 use App\Order;
-use App\OrderUser;
 use App\Sales;
+use App\Engine;
+use App\Counter;
+use App\OrderUser;
+use App\EngineOrderUser;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-// use Symfony\Component\Process\Process;
+
+use App\Repository\Dashboard;
 
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Ressponse
      */
     public function index()
     {
@@ -29,12 +30,13 @@ class OrderController extends Controller
 
         if (Auth::user()->isManager() || Auth::user()->isPpic()) {
             $orders = OrderUser::latest()->get();
+            // $dash = new Dashboard();
+            // dd(Dashboard::index());
         } else {
             $orders = OrderUser::where([
                 'step' => Auth::user()->category_id,
                 'grade' => null,
-            ])
-                ->whereBetween('created_at', [$today, $today->addDays(20)])
+            ])->whereBetween('created_at', [$today, $today->addDays(20)])
                 ->orderBy('batch_id')
                 ->latest()
                 ->get();
@@ -42,7 +44,10 @@ class OrderController extends Controller
 
         return view('order.index', [
             'orders' => $orders,
-            'today' => CarbonImmutable::today()
+            'today' => CarbonImmutable::today(),
+            'months' => Dashboard::MONTHS,
+            'month_today' => request()->get('m') ?: date('n'),
+            'year_today' => request()->get('y') ?: date('Y'),
         ]);
     }
 

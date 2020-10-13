@@ -14,13 +14,17 @@ Order List
     <script>
         $(document).ready(function () {
             $('#datatable').dataTable({
+                "pageLength": 5,
+                "lengthMenu": [
+                    [5, 10, 25, 50, -1],
+                    [5, 10, 25, 50, "All"]
+                ],
                 "order": [],
                 "columnDefs": [{
                     "targets": 'no-sort',
                     "orderable": false,
                 }]
             });
-            // $('#datatable').DataTable();
         });
 
     </script>
@@ -48,7 +52,7 @@ Order List
                             <th>Error</th>
                             <th>Sisa</th>
                             <th>Status</th>
-                            @if(!auth()->user()->isManager() && !auth()->user()->isPpic())
+                            @if(!auth()->user()->isPpic())
                                 <th>Action</th>
                             @endif
                         </tr>
@@ -65,10 +69,8 @@ Order List
                                 <td class="align-middle">{{ $pivot->batch->color->name }}</td>
                                 <td class="align-middle">{{ $pivot->batch->qty }} Kg</td>
                                 <td class="align-middle">{{ $pivot->qty_before_this_step }} Kg</td>
-                                {{-- <td class="align-middle">{{ App\OrderUser::where('batch_id', $pivot->batch_id)->sum('processed') }} Kg</td> --}}
                                 <td class="align-middle text-success">{{ $pivot->current_step_processed }} Kg</td>
                                 <td class="align-middle text-danger">{{ $pivot->current_step_errors }} Kg</td>
-                                {{-- <td class="align-middle text-primary">{{ $pivot->qty_after_errors - $pivot->current_step_processed }} Kg</td> --}}
                                 <td class="align-middle text-primary">{{ $pivot->qty_before_this_step - $pivot->current_step_processed }} Kg</td>
                                 <td class="align-middle">
                                     @if($today >= $pivot->created_at->addDays(12))
@@ -92,6 +94,13 @@ Order List
                                         @endif
                                     </td>
                                 @endif
+                                @if(auth()->user()->isManager())
+                                    <td class="align-middle">
+                                        <a href="{{ url('orders/detail/'. $pivot->id) }}" class="btn btn-primary btn-sm">
+                                            Show
+                                        </a>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
@@ -104,4 +113,7 @@ Order List
         </div>
     </div>
 </div>
+
+@include('dashboard.index')
+
 @endsection

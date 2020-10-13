@@ -4,16 +4,39 @@
 Order List
 @endsection
 
+@push('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+@endpush
+
+@push('js')
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#datatable').dataTable({
+                "order": [],
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+            // $('#datatable').DataTable();
+        });
+
+    </script>
+@endpush
+
 @section('content')
 <div class="row">
     <div class="col-md-12">
         <h4>Batch Order Saat Ini (Ongoing)</h4>
-        <div class="card">
+        <div class="card card-body">
             <div class="table-responsive">
-
-                <table class="table table-hover">
+                <table class="table table-hover" id="datatable">
                     <thead>
                         <tr>
+                            <th>Mulai</th>
+                            <th>Deadline</th>
                             <th>No. SO</th>
                             <th>No. Batch</th>
                             <th>Customer</th>
@@ -24,8 +47,6 @@ Order List
                             <th>Terproses</th>
                             <th>Error</th>
                             <th>Sisa</th>
-                            <th>Mulai</th>
-                            <th>Deadline</th>
                             <th>Status</th>
                             @if(!auth()->user()->isManager() && !auth()->user()->isPpic())
                                 <th>Action</th>
@@ -34,44 +55,44 @@ Order List
                     </thead>
                     <tbody>
                         @forelse($orders as $pivot)
-                        <tr>
-                            <td class="align-middle">{{ $pivot->batch->order->no_so }}</td>
-                            <td class="align-middle">{{ $pivot->batch->id }}</td>
-                            <td class="align-middle">{{ $pivot->batch->order->sales->name }}</td>
-                            <td class="align-middle">{{ $pivot->batch->order->item->name }}</td>
-                            <td class="align-middle">{{ $pivot->batch->color->name }}</td>
-                            <td class="align-middle">{{ $pivot->batch->qty }} Kg</td>
-                            <td class="align-middle">{{ $pivot->qty_before_this_step }} Kg</td>
-                            {{-- <td class="align-middle">{{ App\OrderUser::where('batch_id', $pivot->batch_id)->sum('processed') }} Kg</td> --}}
-                            <td class="align-middle text-success">{{ $pivot->current_step_processed }} Kg</td>
-                            <td class="align-middle text-danger">{{ $pivot->current_step_errors }} Kg</td>
-                            {{-- <td class="align-middle text-primary">{{ $pivot->qty_after_errors - $pivot->current_step_processed }} Kg</td> --}}
-                            <td class="align-middle text-primary">{{ $pivot->qty_before_this_step - $pivot->current_step_processed }} Kg</td>
-                            <td class="align-middle">{{ $pivot->created_at->toFormattedDateString() }}</td>
-                            <td class="align-middle">{{ $pivot->created_at->addDays(12)->toFormattedDateString() }}</td>
-                            <td class="align-middle">
-                                @if($today >= $pivot->created_at->addDays(12))
-                                    <span class="badge badge-danger">Late</span>
-                                @else
-                                    <span class="badge badge-primary">Aktif</span>
-                                @endif
-                            </td>
-                            @if(!auth()->user()->isManager() && !auth()->user()->isPpic())
+                            <tr>
+                                <td class="align-middle">{{ $pivot->created_at->toFormattedDateString() }}</td>
+                                <td class="align-middle">{{ $pivot->created_at->addDays(12)->toFormattedDateString() }}</td>
+                                <td class="align-middle">{{ $pivot->batch->order->no_so }}</td>
+                                <td class="align-middle">{{ $pivot->batch->id }}</td>
+                                <td class="align-middle">{{ $pivot->batch->order->sales->name }}</td>
+                                <td class="align-middle">{{ $pivot->batch->order->item->name }}</td>
+                                <td class="align-middle">{{ $pivot->batch->color->name }}</td>
+                                <td class="align-middle">{{ $pivot->batch->qty }} Kg</td>
+                                <td class="align-middle">{{ $pivot->qty_before_this_step }} Kg</td>
+                                {{-- <td class="align-middle">{{ App\OrderUser::where('batch_id', $pivot->batch_id)->sum('processed') }} Kg</td> --}}
+                                <td class="align-middle text-success">{{ $pivot->current_step_processed }} Kg</td>
+                                <td class="align-middle text-danger">{{ $pivot->current_step_errors }} Kg</td>
+                                {{-- <td class="align-middle text-primary">{{ $pivot->qty_after_errors - $pivot->current_step_processed }} Kg</td> --}}
+                                <td class="align-middle text-primary">{{ $pivot->qty_before_this_step - $pivot->current_step_processed }} Kg</td>
                                 <td class="align-middle">
-                                    @if($today <= $pivot->created_at->addDays(12))
-                                        @if($pivot->user()->exists())
-                                            <a href="{{ route('orders.show', $pivot->id) }}" class="btn btn-primary btn-sm">
-                                                <i class="fa fa-check"></i> Tandai selesai ({{ $pivot->processed }} Kg)
-                                            </a>
-                                        @else
-                                            <a href="{{ route('orders.edit', $pivot->id) }}" class="btn btn-outline-primary btn-sm">
-                                                <i class="fa fa-check"></i> Mulai produksi
-                                            </a>
-                                        @endif
+                                    @if($today >= $pivot->created_at->addDays(12))
+                                        <span class="badge badge-danger">Late</span>
+                                    @else
+                                        <span class="badge badge-primary">Aktif</span>
                                     @endif
                                 </td>
-                            @endif
-                        </tr>
+                                @if(!auth()->user()->isManager() && !auth()->user()->isPpic())
+                                    <td class="align-middle">
+                                        @if($today <= $pivot->created_at->addDays(12))
+                                            @if($pivot->user()->exists())
+                                                <a href="{{ route('orders.show', $pivot->id) }}" class="btn btn-primary btn-sm">
+                                                    <i class="fa fa-check"></i> Tandai selesai ({{ $pivot->processed }} Kg)
+                                                </a>
+                                            @else
+                                                <a href="{{ route('orders.edit', $pivot->id) }}" class="btn btn-outline-primary btn-sm">
+                                                    <i class="fa fa-check"></i> Mulai produksi
+                                                </a>
+                                            @endif
+                                        @endif
+                                    </td>
+                                @endif
+                            </tr>
                         @empty
                             <tr>
                                 <td colspan="9" class="text-center">No data</td>

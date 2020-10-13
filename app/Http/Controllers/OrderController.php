@@ -40,12 +40,6 @@ class OrderController extends Controller
                 ->get();
         }
 
-
-        // foreach ($orders as $pivot) {
-        //     dd($orders->sum('processed'));
-        //     # code...
-        // }
-
         return view('order.index', [
             'orders' => $orders,
             'today' => CarbonImmutable::today()
@@ -229,9 +223,6 @@ class OrderController extends Controller
 
         $nextStep = Auth::user()->category->id;
 
-        // dd($pivot->current_step_processed >= $pivot->qty_after_errors);
-
-        // if (($pivot->current_step_processed + $pivot->current_step_errors) >= $pivot->batch->qty) {
         if ($pivot->current_step_processed >= $pivot->qty_after_errors) {
             $nextStep += 1;
         }

@@ -33,9 +33,6 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/') }}">
-                {{-- <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div> --}}
                 <div class="sidebar-brand-text mx-3">PT. XYZ</div>
             </a>
 
@@ -49,12 +46,12 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                
+
                 {{-- <li class="nav-item {{ Request::is('sales') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('sales') }}">
-                        <i class="fas fa-fw fa-users"></i>
-                        <span>Sales</span>
-                    </a>
+                <a class="nav-link" href="{{ url('sales') }}">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Sales</span>
+                </a>
                 </li>
 
                 <li class="nav-item {{ Request::is('orders/create') ? 'active' : '' }}">
@@ -81,7 +78,7 @@
             </li>
 
             @if(auth()->user()->isPpic())
-            {{-- @if(auth()->user()->isManager()) --}}
+                {{-- @if(auth()->user()->isManager()) --}}
                 <li class="nav-item {{ Request::is('orders/create') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('orders/create') }}">
                         <i class="fas fa-fw fa-plus"></i>
@@ -92,12 +89,12 @@
 
             {{-- @if(auth()->user()->isSoftwinding())
                 <li class="nav-item {{ Request::is('orders/create') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('orders/create') }}">
-                        <i class="fas fa-fw fa-plus"></i>
-                        <span>Order Baru</span>
-                    </a>
-                </li>
-            @endif --}}
+            <a class="nav-link" href="{{ url('orders/create') }}">
+                <i class="fas fa-fw fa-plus"></i>
+                <span>Order Baru</span>
+            </a>
+            </li>
+            @endif--}}
 
             @if(!auth()->user()->isManager() && !auth()->user()->isPpic())
                 <hr class="sidebar-divider">

@@ -120,9 +120,9 @@
         </div>
     </div>
 
-    @if(auth()->user()->isManager())
-        @include('dashboard.index')
-    @endif
+{{--    @if(auth()->user()->isManager())--}}
+{{--        @include('dashboard.index')--}}
+{{--    @endif--}}
 
 
 @endsection

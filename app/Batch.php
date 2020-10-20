@@ -17,4 +17,9 @@ class Batch extends Model
     {
         return $this->belongsTo('App\Color');
     }
+
+    public function process()
+    {
+        return $this->hasMany('App\OrderUser');
+    }
 }

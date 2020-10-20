@@ -16,21 +16,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Repository\Dashboard;
-use Illuminate\Support\Facades\DB;
+//use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        $today = CarbonImmutable::today();
+//        $today = CarbonImmutable::today();
 
-//        dd(OrderUser::select('grade', DB::raw('count(*) as total'))->whereNotNull('grade')->groupBy('grade')->get()->groupBy('grade')->toArray());
-//        $data = OrderUser::select('grade', DB::raw('count(*) as total'))->whereNotNull('grade')->groupBy('grade')->get()->groupBy('grade')->toArray();
-//        dd($data['C'][0]['total'] ?? 0);
         if (Auth::user()->isManager() || Auth::user()->isPpic()) {
-            $orders = OrderUser::latest()->get();
-            // $dash = new Dashboard();
-            // dd(Dashboard::index());
+//            $orders = Order::latest()->get();
+
+            return view('order.orders', [
+                'orders' => Order::latest()->get(),
+                'today' => CarbonImmutable::today(),
+                'months' => Dashboard::MONTHS,
+                'month_today' => request()->get('m') ?: date('n'),
+                'year_today' => request()->get('y') ?: date('Y'),
+            ]);
         } else {
             $orders = OrderUser::where([
                 'step' => Auth::user()->category_id,

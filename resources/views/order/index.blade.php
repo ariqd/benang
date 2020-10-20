@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title')
-Order List
+    Order List
 @endsection
 
 @push('css')
@@ -31,18 +31,18 @@ Order List
 @endpush
 
 @section('content')
-<div class="row">
-    <div class="col-md-12">
-        <h4>Batch Order Saat Ini (Ongoing)</h4>
-        <div class="card card-body">
-            <div class="table-responsive">
-                <table class="table table-hover" id="datatable">
-                    <thead>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Batch Order Saat Ini (Ongoing)</h4>
+            <div class="card card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="datatable">
+                        <thead>
                         <tr>
                             <th>Mulai</th>
                             <th>Deadline</th>
                             <th>No. SO</th>
-                            <th>No. Batch</th>
+                            <th>Step</th>
                             <th>Customer</th>
                             <th>Item</th>
                             <th>Warna</th>
@@ -56,14 +56,14 @@ Order List
                                 <th>Action</th>
                             @endif
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @forelse($orders as $pivot)
                             <tr>
                                 <td class="align-middle">{{ $pivot->created_at->toFormattedDateString() }}</td>
                                 <td class="align-middle">{{ $pivot->created_at->addDays(12)->toFormattedDateString() }}</td>
                                 <td class="align-middle">{{ $pivot->batch->order->no_so }}</td>
-                                <td class="align-middle">{{ $pivot->batch->id }}</td>
+                                <td class="align-middle">{{ $pivot->step }}</td>
                                 <td class="align-middle">{{ $pivot->batch->order->sales->name }}</td>
                                 <td class="align-middle">{{ $pivot->batch->order->item->name }}</td>
                                 <td class="align-middle">{{ $pivot->batch->color->name }}</td>
@@ -71,7 +71,9 @@ Order List
                                 <td class="align-middle">{{ $pivot->qty_before_this_step }} Kg</td>
                                 <td class="align-middle text-success">{{ $pivot->current_step_processed }} Kg</td>
                                 <td class="align-middle text-danger">{{ $pivot->current_step_errors }} Kg</td>
-                                <td class="align-middle text-primary">{{ $pivot->qty_before_this_step - $pivot->current_step_processed }} Kg</td>
+                                <td class="align-middle text-primary">{{ $pivot->qty_before_this_step - $pivot->current_step_processed }}
+                                    Kg
+                                </td>
                                 <td class="align-middle">
                                     @if($today >= $pivot->created_at->addDays(12))
                                         <span class="badge badge-danger">Late</span>
@@ -83,11 +85,14 @@ Order List
                                     <td class="align-middle">
                                         @if($today <= $pivot->created_at->addDays(12))
                                             @if($pivot->user()->exists())
-                                                <a href="{{ route('orders.show', $pivot->id) }}" class="btn btn-primary btn-sm">
-                                                    <i class="fa fa-check"></i> Tandai selesai ({{ $pivot->processed }} Kg)
+                                                <a href="{{ route('orders.show', $pivot->id) }}"
+                                                   class="btn btn-primary btn-sm">
+                                                    <i class="fa fa-check"></i> Tandai selesai ({{ $pivot->processed }}
+                                                    Kg)
                                                 </a>
                                             @else
-                                                <a href="{{ route('orders.edit', $pivot->id) }}" class="btn btn-outline-primary btn-sm">
+                                                <a href="{{ route('orders.edit', $pivot->id) }}"
+                                                   class="btn btn-outline-primary btn-sm">
                                                     <i class="fa fa-check"></i> Mulai produksi
                                                 </a>
                                             @endif
@@ -96,7 +101,8 @@ Order List
                                 @endif
                                 @if(auth()->user()->isManager())
                                     <td class="align-middle">
-                                        <a href="{{ url('orders/detail/'. $pivot->id) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ url('orders/detail/'. $pivot->id) }}"
+                                           class="btn btn-primary btn-sm">
                                             Show
                                         </a>
                                     </td>
@@ -104,16 +110,19 @@ Order List
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center">No data</td>
+                                <td colspan="14" class="text-center">No data</td>
                             </tr>
                         @endforelse
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-@include('dashboard.index')
+    @if(auth()->user()->isManager())
+        @include('dashboard.index')
+    @endif
+
 
 @endsection

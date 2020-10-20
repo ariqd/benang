@@ -16,18 +16,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Repository\Dashboard;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Ressponse
-     */
     public function index()
     {
         $today = CarbonImmutable::today();
 
+//        dd(OrderUser::select('grade', DB::raw('count(*) as total'))->whereNotNull('grade')->groupBy('grade')->get()->groupBy('grade')->toArray());
+//        $data = OrderUser::select('grade', DB::raw('count(*) as total'))->whereNotNull('grade')->groupBy('grade')->get()->groupBy('grade')->toArray();
+//        dd($data['C'][0]['total'] ?? 0);
         if (Auth::user()->isManager() || Auth::user()->isPpic()) {
             $orders = OrderUser::latest()->get();
             // $dash = new Dashboard();
@@ -36,7 +35,11 @@ class OrderController extends Controller
             $orders = OrderUser::where([
                 'step' => Auth::user()->category_id,
                 'grade' => null,
-            ])->whereBetween('created_at', [$today, $today->addDays(20)])
+            ])
+                ->where('step', Auth::user()->category_id)
+//                ->whereBetween('created_at', [function ($query) {
+//                    $query->select('created_at');
+//                }, $today->addDays(20)])
                 ->orderBy('batch_id')
                 ->latest()
                 ->get();
@@ -54,7 +57,7 @@ class OrderController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function create()
     {
@@ -74,7 +77,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -114,7 +117,7 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -149,7 +152,7 @@ class OrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -218,8 +221,8 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)

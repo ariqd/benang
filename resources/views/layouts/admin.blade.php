@@ -38,14 +38,14 @@
 
             <!-- Divider -->
 
-            @if(auth()->user()->isManager())
+            {{-- @if(auth()->user()->isManager())
                 <hr class="sidebar-divider my-0">
                 <li class="nav-item {{ Request::is('/dashboard') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('/dashboard') }}">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
-                </li>
+                </li> --}}
 
                 {{-- <li class="nav-item {{ Request::is('sales') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('sales') }}">
@@ -60,7 +60,7 @@
                         <span>Sales Baru</span>
                     </a>
                 </li> --}}
-            @endif
+            {{-- @endif --}}
 
             <!-- Divider -->
             <hr class="sidebar-divider">

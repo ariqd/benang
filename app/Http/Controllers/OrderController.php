@@ -22,13 +22,19 @@ class OrderController extends Controller
 {
     public function index()
     {
-//        $today = CarbonImmutable::today();
-
         if (Auth::user()->isManager() || Auth::user()->isPpic()) {
-//            $orders = Order::latest()->get();
+            $ongoing = Batch::where('status', 'ONGOING')->get();
+
+            foreach ($ongoing as $batch) {
+                if (CarbonImmutable::today() >= $batch->order->created_at->addDays(12)) {
+                    $batch->status = 'LATE';
+
+                    $batch->save();
+                }
+            }
 
             return view('order.orders', [
-                'orders' => Order::latest()->get(),
+                'batches' => Batch::with('order')->latest()->get(),
                 'today' => CarbonImmutable::today(),
                 'months' => Dashboard::MONTHS,
                 'month_today' => request()->get('m') ?: date('n'),

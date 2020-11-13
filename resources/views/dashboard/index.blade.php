@@ -28,7 +28,12 @@
 
 <div class="row my-3">
     <div class="col-md-6">
+        <h5 class="text-center">Total Grade Barang Produksi</h5>
         <div id="chart" style="height: 300px;"></div>
+    </div>
+    <div class="col-md-6">
+        <h5 class="text-center">Jumlah Order Mengalami Keterlambatan</h5>
+        <div id="chart2" style="height: 300px;"></div>
     </div>
 </div>
 
@@ -40,10 +45,20 @@
     <script>
         const chart = new Chartisan({
             el: '#chart',
-            url: "@chart('grade_pie_chart')",
+            url: "@chart('grade_pie_chart')?hello=world",
             hooks: new ChartisanHooks()
+                .title("{!! $month_today !!}-{!! $year_today !!}")
                 .datasets('pie')
                 .pieColors(['#4CAF50', '#FFEB3B', '#f44336'])
+        });
+
+        const chart2 = new Chartisan({
+            el: '#chart2',
+            url: "@chart('late_order_bar_chart')",
+            hooks: new ChartisanHooks()
+                .title("{!! $month_today !!}-{!! $year_today !!}")
+                // .datasets('pie')
+                // .pieColors(['#4CAF50', '#FFEB3B', '#f44336'])
         });
     </script>
 @endpush

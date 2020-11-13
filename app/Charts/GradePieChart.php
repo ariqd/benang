@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Charts;
 
@@ -19,11 +19,13 @@ class GradePieChart extends BaseChart
      */
     public function handler(Request $request): Chartisan
     {
+        // dd($request->all());
+        // $request->hello -> works
+
         $data = OrderUser::select('grade', DB::raw('count(*) as total'))->whereNotNull('grade')->groupBy('grade')->get()->groupBy('grade')->toArray();
 
         return Chartisan::build()
             ->labels(['A', 'B', 'C'])
             ->dataset('Sample', [$data['A'][0]['total'] ?? 0, $data['B'][0]['total'] ?? 0, $data['C'][0]['total'] ?? 0]);
-//            ->dataset('Sample 2', [3, 2, 1]);
     }
 }

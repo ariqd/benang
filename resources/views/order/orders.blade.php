@@ -44,7 +44,7 @@
                             <th>No. SO</th>
                             <th>Customer</th>
                             <th>Item</th>
-                            <th>Jumlah Batch</th>
+                            <th>Warna</th>
                             <th>Status</th>
                             @if(!auth()->user()->isPpic())
                                 <th>Action</th>
@@ -52,16 +52,16 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @forelse($orders as $order)
+                        @forelse($batches as $batch)
                             <tr>
-                                <td class="align-middle">{{ $order->created_at->toFormattedDateString() }}</td>
-                                <td class="align-middle">{{ $order->created_at->addDays(12)->toFormattedDateString() }}</td>
-                                <td class="align-middle">{{ $order->no_so }}</td>
-                                <td class="align-middle">{{ $order->sales->name }}</td>
-                                <td class="align-middle">{{ $order->item->name }}</td>
-                                <td class="align-middle">{{ $order->batch->count() }}</td>
+                                <td class="align-middle">{{ $batch->order->created_at->toFormattedDateString() }}</td>
+                                <td class="align-middle">{{ $batch->order->created_at->addDays(12)->toFormattedDateString() }}</td>
+                                <td class="align-middle">{{ $batch->order->no_so }}</td>
+                                <td class="align-middle">{{ $batch->order->sales->name }}</td>
+                                <td class="align-middle">{{ $batch->order->item->name }}</td>
+                                <td class="align-middle">{{ $batch->color->name }}</td>
                                 <td class="align-middle">
-                                    @if($today >= $order->created_at->addDays(12))
+                                    @if($today >= $batch->order->created_at->addDays(12))
                                         <span class="badge badge-danger">Late</span>
                                     @else
                                         <span class="badge badge-primary">Ongoing</span>
@@ -69,7 +69,7 @@
                                 </td>
                                 @if(auth()->user()->isManager())
                                     <td class="align-middle">
-                                        <a href="{{ url('orders/detail/'. $order->id) }}"
+                                        <a href="{{ url('orders/detail/'. $batch->id) }}"
                                            class="btn btn-primary btn-sm">
                                             Detail
                                         </a>

@@ -25,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(Charts $charts)
     {
         $charts->register([
-            \App\Charts\GradePieChart::class
+            \App\Charts\GradePieChart::class,
+            \App\Charts\LateOrderBarChart::class
         ]);
     }
 }

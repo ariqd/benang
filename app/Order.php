@@ -18,10 +18,10 @@ class Order extends Model
         return $this->belongsToMany('App\User')->as('process')->using('App\OrderUser')->withPivot('grade', 'step')->withTimestamps();
     }
 
-//     public function process()
-//     {
-//         return $this->hasMany('App\OrderUser', '');
-//     }
+    //     public function process()
+    //     {
+    //         return $this->hasMany('App\OrderUser', '');
+    //     }
 
     public function batch()
     {
@@ -50,14 +50,14 @@ class Order extends Model
         });
     }
 
-//    public function scopeUnfinished($query)
-//    {
-//        return $query->whereHas('users', function (Builder $query) {
-//            $query->where('process.grade', '=', null);
-//        });
-//
-////        return $query->process->where('grade', '=', null);
-//    }
+    //    public function scopeUnfinished($query)
+    //    {
+    //        return $query->whereHas('users', function (Builder $query) {
+    //            $query->where('process.grade', '=', null);
+    //        });
+    //
+    ////        return $query->process->where('grade', '=', null);
+    //    }
 
     public function scopeNotFinished($query)
     {

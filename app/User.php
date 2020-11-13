@@ -104,8 +104,13 @@ class User extends Authenticatable
         return $this->hasOne('App\Category', 'id', 'category_id');
     }
 
-    public function orders()
+//    public function orders()
+//    {
+//        return $this->belongsToMany('App\Order');
+//    }
+
+    public function process()
     {
-        return $this->belongsToMany('App\Order');
+        return $this->hasMany('App\OrderUser');
     }
 }

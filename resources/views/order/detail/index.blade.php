@@ -49,24 +49,24 @@
                         </tr>
                     @endforelse
                     </tbody>
-{{--                    <tfoot>--}}
-{{--                    <tr>--}}
-{{--                        <td colspan="7" class="text-right">Qty Batch:</td>--}}
-{{--                        <td>{{ $process->batch->qty }} Kg</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td colspan="5" class="text-right">Total Diproses:</td>--}}
-{{--                        <td>{{ $process->current_step_processed }} Kg</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td colspan="7" class="text-right">Total Error:</td>--}}
-{{--                        <td>{{ $process->total_errors }} Kg</td>--}}
-{{--                    </tr>--}}
-{{--                    <tr>--}}
-{{--                        <td colspan="7" class="text-right"><strong>Sisa Qty:</strong></td>--}}
-{{--                        <td><b>{{ $process->qty_after_errors }} Kg</b></td>--}}
-{{--                    </tr>--}}
-{{--                    </tfoot>--}}
+                    {{--                    <tfoot>--}}
+                    {{--                    <tr>--}}
+                    {{--                        <td colspan="7" class="text-right">Qty Batch:</td>--}}
+                    {{--                        <td>{{ $process->batch->qty }} Kg</td>--}}
+                    {{--                    </tr>--}}
+                    {{--                    <tr>--}}
+                    {{--                        <td colspan="5" class="text-right">Total Diproses:</td>--}}
+                    {{--                        <td>{{ $process->current_step_processed }} Kg</td>--}}
+                    {{--                    </tr>--}}
+                    {{--                    <tr>--}}
+                    {{--                        <td colspan="7" class="text-right">Total Error:</td>--}}
+                    {{--                        <td>{{ $process->total_errors }} Kg</td>--}}
+                    {{--                    </tr>--}}
+                    {{--                    <tr>--}}
+                    {{--                        <td colspan="7" class="text-right"><strong>Sisa Qty:</strong></td>--}}
+                    {{--                        <td><b>{{ $process->qty_after_errors }} Kg</b></td>--}}
+                    {{--                    </tr>--}}
+                    {{--                    </tfoot>--}}
                 </table>
 
                 <div class="card-body">
@@ -94,4 +94,22 @@
             </div>
         </div>
     </div>
+
+    <div class="row my-3">
+        {{--        <div class="col-6">--}}
+        {{--            <h4 class="text-center">Jumlah Barang Error</h4>--}}
+
+        {{--        </div>--}}
+        <div class="col-6">
+            <h4 class="text-center">Jumlah Barang Error</h4>
+            <div class="w-100">
+                {!! $line_error->container() !!}
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+    {!! $line_error->script() !!}
+@endpush

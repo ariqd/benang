@@ -10,8 +10,12 @@ class OrderDetailController extends Controller
 {
     public function index($id)
     {
+        $batch = Batch::with('process')->find($id);
+
+//        dd($batch->process->groupBy('step')->toArray());
+
         return view('order.detail.index', [
-            'batch' => Batch::with('process')->find($id)
+            'batch' => $batch
         ]);
     }
 }

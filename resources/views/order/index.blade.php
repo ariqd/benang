@@ -78,7 +78,11 @@
                                     @if($today >= $pivot->created_at->addDays(12))
                                         <span class="badge badge-danger">Late</span>
                                     @else
-                                        <span class="badge badge-primary">Aktif</span>
+                                        @if($pivot->batch->order->status == 'DONE')
+                                            <span class="badge badge-success">Done</span>
+                                        @else
+                                            <span class="badge badge-primary">Ongoing</span>
+                                        @endif
                                     @endif
                                 </td>
                                 @if(!auth()->user()->isManager() && !auth()->user()->isPpic())

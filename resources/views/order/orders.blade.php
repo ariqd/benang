@@ -64,7 +64,11 @@
                                     @if($today >= $batch->order->created_at->addDays(12))
                                         <span class="badge badge-danger">Late</span>
                                     @else
-                                        <span class="badge badge-primary">Ongoing</span>
+                                        @if($order->status == 'DONE')
+                                            <span class="badge badge-success">Done</span>
+                                        @else
+                                            <span class="badge badge-primary">Ongoing</span>
+                                        @endif
                                     @endif
                                 </td>
                                 @if(auth()->user()->isManager())

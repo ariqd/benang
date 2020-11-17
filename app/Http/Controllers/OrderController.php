@@ -241,6 +241,16 @@ class OrderController extends Controller
             ]);
 
             EngineOrderUser::where('process_id', $pivot->id)->update(['active' => FALSE]);
+        } else {
+            foreach ($pivot->batch->order as $order) {
+                $order->status = 'DONE';
+                $order->save();
+
+                foreach ($order->batch as $batches) {
+                    $batches->status = 'DONE';
+                    $batches->save();
+                }
+            }
         }
 
         return redirect()

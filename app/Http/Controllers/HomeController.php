@@ -28,6 +28,6 @@ class HomeController extends Controller
             return redirect('/orders');
         }
 
-        return view('home');
+        return redirect('/dashboard');
     }
 }

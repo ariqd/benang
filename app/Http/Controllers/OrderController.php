@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Repository\Dashboard;
+
 //use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -23,38 +24,23 @@ class OrderController extends Controller
     public function index()
     {
         if (Auth::user()->isManager() || Auth::user()->isPpic()) {
-            $ongoing = Batch::where('status', 'ONGOING')->get();
-
-            foreach ($ongoing as $batch) {
-                if (CarbonImmutable::today() >= $batch->order->created_at->addDays(12)) {
-                    $batch->status = 'LATE';
-
-                    $batch->save();
-                }
-            }
-
-            return view('order.orders', [
-                'batches' => Batch::with('order')->latest()->get(),
-                'today' => CarbonImmutable::today(),
-                'months' => Dashboard::MONTHS,
-                'month_today' => request()->get('m') ?: date('n'),
-                'year_today' => request()->get('y') ?: date('Y'),
-            ]);
-        } else {
-            $orders = OrderUser::where([
-                'step' => Auth::user()->category_id,
-                'grade' => null,
-            ])
-                ->where('step', Auth::user()->category_id)
-//                ->whereBetween('created_at', [function ($query) {
-//                    $query->select('created_at');
-//                }, $today->addDays(20)])
-                ->orderBy('batch_id')
-                ->latest()
-                ->get();
+            return redirect('/dashboard');
         }
 
+        $orders = OrderUser::where([
+            'step' => Auth::user()->category_id,
+            'grade' => null,
+        ])
+            ->where('step', Auth::user()->category_id)
+            //                ->whereBetween('created_at', [function ($query) {
+            //                    $query->select('created_at');
+            //                }, $today->addDays(20)])
+            ->orderBy('batch_id')
+            ->latest()
+            ->get();
+
         return view('order.index', [
+            'title' => 'Batch Order Saat Ini (Ongoing)',
             'orders' => $orders,
             'today' => CarbonImmutable::today(),
             'months' => Dashboard::MONTHS,

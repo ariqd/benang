@@ -1,4 +1,4 @@
-<div class="row my-3">
+<div class="row my-3 pt-3">
     <div class="col-md-6">
         <h4>Grade Barang Pada Periode</h4>
     </div>
@@ -29,36 +29,21 @@
 <div class="row my-3">
     <div class="col-md-6">
         <h5 class="text-center">Total Grade Barang Produksi</h5>
-        <div id="chart" style="height: 300px;"></div>
+        {{-- <div id="chart" style="height: 300px;"></div> --}}
+        <div class="w-100">
+            {!! $pie_grade->container() !!}
+        </div>
     </div>
     <div class="col-md-6">
         <h5 class="text-center">Jumlah Order Mengalami Keterlambatan</h5>
-        <div id="chart2" style="height: 300px;"></div>
+        <div class="w-100">
+            {!! $bar_late->container() !!}
+        </div>
     </div>
 </div>
 
 @push('js')
-    <!-- Charting library -->
-    <script src="https://unpkg.com/chart.js@2.9.3/dist/Chart.min.js"></script>
-    <!-- Chartisan -->
-    <script src="https://unpkg.com/@chartisan/chartjs@^2.1.0/dist/chartisan_chartjs.umd.js"></script>
-    <script>
-        const chart = new Chartisan({
-            el: '#chart',
-            url: "@chart('grade_pie_chart')?hello=world",
-            hooks: new ChartisanHooks()
-                .title("{!! $month_today !!}-{!! $year_today !!}")
-                .datasets('pie')
-                .pieColors(['#4CAF50', '#FFEB3B', '#f44336'])
-        });
-
-        const chart2 = new Chartisan({
-            el: '#chart2',
-            url: "@chart('late_order_bar_chart')",
-            hooks: new ChartisanHooks()
-                .title("{!! $month_today !!}-{!! $year_today !!}")
-                // .datasets('pie')
-                // .pieColors(['#4CAF50', '#FFEB3B', '#f44336'])
-        });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+    {!! $pie_grade->script() !!}
+    {!! $bar_late->script() !!}
 @endpush

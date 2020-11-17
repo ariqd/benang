@@ -33,7 +33,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <h4>Batch Order Saat Ini (Ongoing)</h4>
+            <h4>{{$title}}</h4>
             <div class="card card-body">
                 <div class="table-responsive">
                     <table class="table table-hover" id="datatable">

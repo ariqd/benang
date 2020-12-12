@@ -19,22 +19,20 @@ class OrderDetailController extends Controller
 
         $process = $batch->process->whereNotNull('grade')->groupBy('step');
 
-        $labels = $dataset =  [];
+        $labels = $dataset = [];
 
-        foreach ($process as $key => $pivot) {
-//            dd($pivot->sum('error'));
-            $labels[] = OrderUser::step($key);
+        foreach ($process as $pivot) {
+            $labels[] = $pivot[0]->user->username;
             $dataset[] = $pivot->sum('error');
         }
 
-//        dd($dataset);
+        $lineError->labels(collect($labels)->map(function ($username) {
+            return ucwords($username);
+        }));
 
-        $lineError->labels($labels);
-
-        $lineError->dataset('Jumlah Barang Error', 'line', $dataset)
+        $lineError->dataset('Jumlah Barang Error (Kg)', 'bar', $dataset)
             ->color('#2196F3')
-            ->backgroundColor('#B3E5FC')
-            ->lineTension(0);
+            ->backgroundColor('#B3E5FC');
 
         return view('order.detail.index', [
             'batch' => $batch,

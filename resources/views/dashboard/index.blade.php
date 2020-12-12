@@ -28,14 +28,14 @@
 
 <div class="row my-3">
     <div class="col-md-6">
-        <h5 class="text-center">Total Grade Barang Produksi</h5>
+        <h5 class="text-center">Total Grade Barang Produksi (dalam %)</h5>
         {{-- <div id="chart" style="height: 300px;"></div> --}}
         <div class="w-100">
             {!! $pie_grade->container() !!}
         </div>
     </div>
     <div class="col-md-6">
-        <h5 class="text-center">Jumlah Order Mengalami Keterlambatan</h5>
+        <h5 class="text-center">Jumlah Order Mengalami Keterlambatan (dalam %)</h5>
         <div class="w-100">
             {!! $bar_late->container() !!}
         </div>

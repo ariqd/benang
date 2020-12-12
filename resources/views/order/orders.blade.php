@@ -62,12 +62,22 @@
                                 <td class="align-middle">{{ $batch->color->name }}</td>
                                 <td class="align-middle">
                                     @if($today >= $batch->order->created_at->addDays(12))
-                                        <span class="badge badge-danger">Late</span>
+                                        <span class="badge badge-danger">Order Late</span>
                                     @else
                                         @if($batch->order->status == 'DONE')
-                                            <span class="badge badge-success">Done</span>
+                                            <span class="badge badge-success">Order Done</span>
                                         @else
-                                            <span class="badge badge-primary">Ongoing</span>
+                                            <span class="badge badge-primary">Order Ongoing</span>
+                                        @endif
+                                    @endif
+
+                                    @if($today >= $batch->created_at->addDays(12))
+                                        <span class="badge badge-danger">Batch Late</span>
+                                    @else
+                                        @if($batch->status == 'DONE')
+                                            <span class="badge badge-success">Batch Done</span>
+                                        @else
+                                            <span class="badge badge-primary">Batch Ongoing</span>
                                         @endif
                                     @endif
                                 </td>

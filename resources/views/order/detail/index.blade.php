@@ -13,11 +13,11 @@
     <div class="row">
         <div class="col-12">
             <div class="card my-3">
-                <div class="card-body">
-                    <span class="font-weight-bold">
-                        Proses Batch
-                    </span>
-                </div>
+{{--                <div class="card-body">--}}
+{{--                    <span class="font-weight-bold">--}}
+{{--                        Proses Batch--}}
+{{--                    </span>--}}
+{{--                </div>--}}
                 <table class="table">
                     <thead>
                     <tr>
@@ -38,7 +38,12 @@
                             <td>{{ $process->created_at->toFormattedDateString() }}</td>
                             <td>{{ App\OrderUser::step($process->step) }}</td>
                             <td>{{ $process->user->name ?? '-' }}</td>
-                            <td>{{ $process->processed }} Kg</td>
+                            <td>
+                                <strong>Total: {{ $process->processed }} Kg</strong> <br>
+                                @foreach($process->usage as $usage)
+                                    Mesin {{$usage->engine->name}}: {{$usage->qty}} Kg <br>
+                                @endforeach
+                            </td>
                             <td>{{ $process->grade ?? '-' }}</td>
                             <td>{{ $process->error }} Kg</td>
                             <td>{{ $process->processed - $process->error }} Kg</td>
@@ -49,24 +54,6 @@
                         </tr>
                     @endforelse
                     </tbody>
-                    {{--                    <tfoot>--}}
-                    {{--                    <tr>--}}
-                    {{--                        <td colspan="7" class="text-right">Qty Batch:</td>--}}
-                    {{--                        <td>{{ $process->batch->qty }} Kg</td>--}}
-                    {{--                    </tr>--}}
-                    {{--                    <tr>--}}
-                    {{--                        <td colspan="5" class="text-right">Total Diproses:</td>--}}
-                    {{--                        <td>{{ $process->current_step_processed }} Kg</td>--}}
-                    {{--                    </tr>--}}
-                    {{--                    <tr>--}}
-                    {{--                        <td colspan="7" class="text-right">Total Error:</td>--}}
-                    {{--                        <td>{{ $process->total_errors }} Kg</td>--}}
-                    {{--                    </tr>--}}
-                    {{--                    <tr>--}}
-                    {{--                        <td colspan="7" class="text-right"><strong>Sisa Qty:</strong></td>--}}
-                    {{--                        <td><b>{{ $process->qty_after_errors }} Kg</b></td>--}}
-                    {{--                    </tr>--}}
-                    {{--                    </tfoot>--}}
                 </table>
 
                 <div class="card-body">
@@ -101,7 +88,7 @@
 
         {{--        </div>--}}
         <div class="col-6">
-            <h4 class="text-center">Jumlah Barang Error</h4>
+            <h4 class="text-center">Jumlah Barang Error (dalam Kg)</h4>
             <div class="w-100">
                 {!! $line_error->container() !!}
             </div>

@@ -13,11 +13,11 @@
     <div class="row">
         <div class="col-12">
             <div class="card my-3">
-{{--                <div class="card-body">--}}
-{{--                    <span class="font-weight-bold">--}}
-{{--                        Proses Batch--}}
-{{--                    </span>--}}
-{{--                </div>--}}
+                {{--                <div class="card-body">--}}
+                {{--                    <span class="font-weight-bold">--}}
+                {{--                        Proses Batch--}}
+                {{--                    </span>--}}
+                {{--                </div>--}}
                 <table class="table">
                     <thead>
                     <tr>
@@ -83,10 +83,12 @@
     </div>
 
     <div class="row my-3">
-        {{--        <div class="col-6">--}}
-        {{--            <h4 class="text-center">Jumlah Barang Error</h4>--}}
-
-        {{--        </div>--}}
+        <div class="col-6">
+            <h4 class="text-center">Penggunaan Mesin (dalam Kg)</h4>
+            <div class="w-100">
+                {!! $bar_usage->container() !!}
+            </div>
+        </div>
         <div class="col-6">
             <h4 class="text-center">Jumlah Barang Error (dalam Kg)</h4>
             <div class="w-100">
@@ -98,5 +100,6 @@
 
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+    {!! $bar_usage->script() !!}
     {!! $line_error->script() !!}
 @endpush

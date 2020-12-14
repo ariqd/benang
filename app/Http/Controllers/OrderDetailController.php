@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Batch;
+use App\Charts\BarUsage;
 use App\Charts\LineError;
 
 //use App\Order;
@@ -19,24 +20,43 @@ class OrderDetailController extends Controller
 
         $process = $batch->process->whereNotNull('grade')->groupBy('step');
 
-        $labels = $dataset = [];
+        $labelsLineError = $datasetLineError = [];
 
         foreach ($process as $pivot) {
-            $labels[] = $pivot[0]->user->username;
-            $dataset[] = $pivot->sum('error');
+            $labelsLineError[] = $pivot[0]->user->username;
+            $datasetLineError[] = $pivot->sum('error');
         }
 
-        $lineError->labels(collect($labels)->map(function ($username) {
+        $lineError->labels(collect($labelsLineError)->map(function ($username) {
             return ucwords($username);
         }));
 
-        $lineError->dataset('Jumlah Barang Error (Kg)', 'bar', $dataset)
+        $lineError->dataset('Jumlah Barang Error (Kg)', 'bar', $datasetLineError)
             ->color('#2196F3')
             ->backgroundColor('#B3E5FC');
 
+        // Bar Chart Penggunaan Mesin
+        $barUsage = new BarUsage;
+
+        $labelsBarUsage = $datasetBarUsage = [];
+
+        foreach ($batch->process as $pivot) {
+            foreach ($pivot->usage as $usage) {
+                $labelsBarUsage[] = $pivot->user->category->name . " " . $usage->engine->name;
+                $datasetBarUsage[] = $usage->qty;
+            }
+        }
+
+        $barUsage->labels($labelsBarUsage);
+
+        $barUsage->dataset('Penggunaan Mesin (Kg)', 'bar', $datasetBarUsage)
+            ->color('#6D4C41')
+            ->backgroundColor('#8D6E63');
+
         return view('order.detail.index', [
             'batch' => $batch,
-            'line_error' => $lineError
+            'line_error' => $lineError,
+            'bar_usage' => $barUsage
         ]);
     }
 }

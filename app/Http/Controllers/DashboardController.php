@@ -39,16 +39,16 @@ class DashboardController extends Controller
             ->groupBy('grade')
             ->get();
 
-        $gradeA = isset($grades->groupBy('status')
-                ->toArray()['LATE']) ? round($grades->groupBy('grade')
+        $gradeA = isset($grades->groupBy('grade')
+                ->toArray()['A']) ? round($grades->groupBy('grade')
                 ->toArray()['A'][0]['total'] / $grades->sum('total') * 100, 2) : 0;
 
-        $gradeB = isset($grades->groupBy('status')
-                ->toArray()['LATE']) ? round($grades->groupBy('grade')
+        $gradeB = isset($grades->groupBy('grade')
+                ->toArray()['B']) ? round($grades->groupBy('grade')
                 ->toArray()['B'][0]['total'] / $grades->sum('total') * 100, 2) : 0;
 
-        $gradeC = isset($grades->groupBy('status')
-                ->toArray()['LATE']) ? round($grades->groupBy('grade')
+        $gradeC = isset($grades->groupBy('grade')
+                ->toArray()['C']) ? round($grades->groupBy('grade')
                 ->toArray()['C'][0]['total'] / $grades->sum('total') * 100, 2) : 0;
 
         $pieGrade = new PieGrade;
